@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -27,6 +28,7 @@ header p {
 }
 
 main {
+    width: 100%;
     max-width: 800px;
     margin: 60px auto;
     padding: 40px 20px;
@@ -59,6 +61,7 @@ button {
 button:hover {
     background-color: #5b2f87;
 }
+
 .menu {
     background-color: white;
     display: flex;
@@ -75,26 +78,52 @@ button:hover {
     text-decoration: none;
     font-weight: bold;
     font-size: 16px;
+    transition: color 0.3s ease;
 }
 
 .menu a:hover {
-    color: #a47bd1;
+    color: #b08ae0;
 }
-.categorias {
+
+.barra-pesquisa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 700px;
+    margin: 25px auto;
+    padding: 0 20px;
+}
+
+.barra-pesquisa input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 16px;
+    border: 1px solid #d8c3ee;
+    border-radius: 25px;
+    font-size: 16px;
+}
+
+.categorias,
+.publicacoes {
     padding: 40px 20px;
     text-align: center;
 }
 
-.categorias h2 {
+.categorias h2,
+.publicacoes h2 {
     color: #6b3fa0;
     margin-bottom: 12px;
 }
 
-.lista-categorias {
+.lista-categorias,
+.lista-publicacoes {
     display: flex;
-    justify-content: center;
-    gap: 20px;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
     margin-top: 25px;
 }
 
@@ -104,6 +133,13 @@ button:hover {
     padding: 25px;
     width: 180px;
     box-shadow: 0 3px 12px #00000010;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.categoria:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px #6b3fa033;
 }
 
 .categoria span {
@@ -114,32 +150,21 @@ button:hover {
     color: #6b3fa0;
     margin-top: 12px;
 }
-.publicacoes {
-    padding: 40px 20px;
-    text-align: center;
-}
-
-.publicacoes h2 {
-    color: #6b3fa0;
-    margin-bottom: 12px;
-}
-
-.lista-publicacoes {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 22px;
-    flex-wrap: wrap;
-    margin-top: 28px;
-}
 
 .publicacao {
     background-color: white;
     border-radius: 16px;
     width: 280px;
+    min-width: 0;
     overflow: hidden;
     box-shadow: 0 4px 14px #00000012;
     text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.publicacao:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 22px #6b3fa033;
 }
 
 .imagem-publicacao {
@@ -149,6 +174,13 @@ button:hover {
     align-items: center;
     justify-content: center;
     font-size: 64px;
+}
+
+.imagem-publicacao img {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
 .conteudo-publicacao {
@@ -176,85 +208,9 @@ button:hover {
     margin-top: 0;
 }
 
-.categoria {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-}
-
-.categoria:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 8px 20px #6b3fa033;
-}
-
-.publicacao {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.publicacao:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 22px #6b3fa033;
-}
-
-.menu a {
-    transition: color 0.3s ease;
-}
-
-.menu a:hover {
-    color: #b08ae0;
-}
-
-/* ===== MOIRAS RESPONSIVO ===== */
-
-/* Evita que elementos ultrapassem a tela */
-* {
-    box-sizing: border-box;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Barra de pesquisa */
-.barra-pesquisa {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    max-width: 700px;
-    margin: 25px auto;
-    padding: 0 20px;
-}
-
-.barra-pesquisa input {
-    flex: 1;
-    min-width: 0;
-    padding: 13px 16px;
-    border: 1px solid #d8c3ee;
-    border-radius: 25px;
-    font-size: 16px;
-}
-
-/* Categorias e publicações */
-.lista-categorias,
-.lista-publicacoes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
-    gap: 20px;
-}
-
-.categoria,
-.publicacao {
-    min-width: 0;
-}
-
-/* Tablets */
+/* Responsividade para tablets */
 @media (max-width: 900px) {
     main {
-        width: 100%;
         max-width: 100%;
         padding: 30px 20px;
     }
@@ -268,6 +224,7 @@ img {
     }
 }
 
+/* Responsividade para celulares */
 @media (max-width: 600px) {
     header {
         padding: 24px 15px;
@@ -278,17 +235,15 @@ img {
         letter-spacing: 3px;
     }
 
-.menu {
-    gap: 10px;
-    padding: 12px 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+    .menu {
+        gap: 10px;
+        padding: 12px 8px;
+    }
 
-.menu a {
-    font-size: 13px;
-    padding: 5px 2px;
-}
+    .menu a {
+        font-size: 13px;
+        padding: 5px 2px;
+    }
 
     main {
         margin: 20px auto;
@@ -328,12 +283,4 @@ img {
     .conteudo-publicacao {
         padding: 16px;
     }
-}
-
-.imagem-publicacao img {
-    display: block;
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 16px 16px 0 0;
 }

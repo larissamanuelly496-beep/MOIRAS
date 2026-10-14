@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,117 +8,98 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
         <h1>MOIRAS</h1>
         <p>Arte feita à mão, histórias compartilhadas.</p>
     </header>
+
     <nav class="menu">
+        <a href="#inicio">Início</a>
+        <a href="#explorar">Explorar</a>
+        <a href="#artistas">Artistas</a>
+        <a href="#categorias">Categorias</a>
+        <a href="#sobre">Sobre</a>
+    </nav>
 
-<section class="barra-pesquisa">
-    <input
-        type="text"
-        id="pesquisa"
-        placeholder="🔎 Procure por crochê, bordado, amigurumi..."
-    >
-    <button type="button" id="botao-pesquisa">Pesquisar</button>
-</section>
+    <section class="barra-pesquisa">
+        <input type="text" id="pesquisa" placeholder="🔎 Procure por crochê, bordado, amigurumi...">
+        <button type="button" id="botao-pesquisa">Pesquisar</button>
+    </section>
 
-    <a href="#inicio">Início</a>
-    <a href="#explorar">Explorar</a>
-    <a href="#artistas">Artistas</a>
-    <a href="#categorias">Categorias</a>
-    <a href="#sobre">Sobre</a>
-</nav>
-
-    <main>
+    <main id="inicio">
         <h2>Venha fazer parte do Moiras!</h2>
+        <p>Cada peça tem uma história. Compartilhe a sua.</p>
+        <p>Valorize o trabalho manual e conecte-se com quem ama artesanato.</p>
+        <button type="button">Criar minha conta</button>
 
-        <p>
-            Cada peça tem uma história.
-            Compartilhe a sua.
-        </p>
-
-        <p>
-            Valorize o trabalho manual e conecte-se
-            com quem ama artesanato.
-        </p>
-
-        <button>Criar minha conta</button>
         <section id="categorias" class="categorias">
-    <h2>Explore o mundo do artesanato</h2>
-    <p>Encontre trabalhos feitos com carinho.</p>
+            <h2>Explore o mundo do artesanato</h2>
+            <p>Encontre trabalhos feitos com carinho.</p>
 
-    <div class="lista-categorias">
-        <article class="categoria"data-categoria="croche">
-            <span></span>
-            <h3>Crochê</h3>
-        </article>
-
-        <article class="categoria"data-categoria="amigurumi">
-            <span></span>
-            <h3>Amigurumi</h3>
-        </article>
-
-        <article class="categoria" data-categoria="bordado">
-            <span></span>
-            <h3>Bordado</h3>
-        </article>
-
-        <article class="categoria" data-categoria="costura">
-            <span></span>
-            <h3>Costura</h3>
-        </article>
-    </div>
-</section>
-<section id="explorar" class="publicacoes">
-    <h2>Trabalhos que contam histórias</h2>
-    <p>Conheça criações feitas com carinho por nossos artistas.</p>
-
-    <div class="lista-publicacoes">
-
-        <article class="publicacao">
-            
-<div class="imagem-publicacao">
-    <img src="fotos/flor.jfif" alt="Flores feitas à mão">
-
-</div>
-
-            <div class="conteudo-publicacao">
-                <h3>Flores de crochê</h3>
-                <p>Pequenos detalhes feitos à mão para deixar o dia mais bonito.</p>
-                <span>Por Ana Artista</span>
-                <button type="button">♡ Curtir</button>
+            <div class="lista-categorias">
+                <article class="categoria" data-categoria="croche">
+                    <span>🧶</span>
+                    <h3>Crochê</h3>
+                </article>
+                <article class="categoria" data-categoria="amigurumi">
+                    <span>🧸</span>
+                    <h3>Amigurumi</h3>
+                </article>
+                <article class="categoria" data-categoria="bordado">
+                    <span>🪡</span>
+                    <h3>Bordado</h3>
+                </article>
+                <article class="categoria" data-categoria="costura">
+                    <span>🧵</span>
+                    <h3>Costura</h3>
+                </article>
             </div>
-        </article>
+        </section>
 
-        <article class="publicacao">
-            <div class="imagem-publicacao">
-                <img src="fotos/abelha.jpg" alt="Trabalho artesanal de amigurumi">
-            </div>
-            <div class="conteudo-publicacao">
-                <h3>Meu primeiro amigurumi</h3>
-                <p>Um bichinho feito ponto por ponto, com muito carinho.</p>
-                <span>Por Maria Criativa</span>
-                <button type="button">♡ Curtir</button>
-            </div>
-        </article>
+        <section id="explorar" class="publicacoes">
+            <h2>Trabalhos que contam histórias</h2>
+            <p>Conheça criações feitas com carinho por nossos artistas.</p>
 
-        <article class="publicacao">
-            <div class="imagem-publicacao">
-                <img src="fotos/livos.jpg" alt="Trabalho artesanal de amigurumi">
-            </div>
-            <div class="conteudo-publicacao">
-                <h3>Bordado floral</h3>
-                <p>Linhas, cores e criatividade transformadas em arte.</p>
-                <span>Por Clara Feito à Mão</span>
-                <button type="button">♡ Curtir</button>
-            </div>
-        </article>
+            <div class="lista-publicacoes">
+                <article class="publicacao">
+                    <div class="imagem-publicacao">
+                        <img src="fotos/flor.jfif" alt="Flores feitas à mão">
+                    </div>
+                    <div class="conteudo-publicacao">
+                        <h3>Flores de crochê</h3>
+                        <p>Pequenos detalhes feitos à mão para deixar o dia mais bonito.</p>
+                        <span>Por Lari</span>
+                        <button type="button">♡ Curtir</button>
+                    </div>
+                </article>
 
-    </div>
-</section>
-</main>
-<script src="script.js"></script>
+                <article class="publicacao">
+                    <div class="imagem-publicacao">
+                        <img src="fotos/abelha.jpg" alt="Abelha de crochê feita à mão">
+                    </div>
+                    <div class="conteudo-publicacao">
+                        <h3>Meu primeiro amigurumi</h3>
+                        <p>Um bichinho feito ponto por ponto, com muito carinho.</p>
+                        <span>Por Maria Criativa</span>
+                        <button type="button">♡ Curtir</button>
+                    </div>
+                </article>
+
+                <article class="publicacao">
+                    <div class="imagem-publicacao">
+                        <img src="fotos/livros.png" alt="Trabalho artesanal bordado">
+                    </div>
+                    <div class="conteudo-publicacao">
+                        <h3>Bordado floral</h3>
+                        <p>Linhas, cores e criatividade transformadas em arte.</p>
+                        <span>Por Clara Feito à Mão</span>
+                        <button type="button">♡ Curtir</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
