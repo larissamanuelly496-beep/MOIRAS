@@ -2,12 +2,16 @@ const botoesCurtir = document.querySelectorAll(".publicacao button");
 
 botoesCurtir.forEach((botao) => {
     botao.addEventListener("click", () => {
-        if (botao.textContent.includes("Curtir")) {
-            botao.textContent = "Curtido";
-            botao.style.backgroundColor = "#5b2f87";
-        } else {
+        const jaCurtiu = botao.dataset.curtido === "true";
+
+        if (jaCurtiu) {
+            botao.dataset.curtido = "false";
             botao.textContent = "Curtir";
             botao.style.backgroundColor = "#8b5cc0";
+        } else {
+            botao.dataset.curtido = "true";
+            botao.textContent = "Curtido";
+            botao.style.backgroundColor = "#5b2f87";
         }
     });
 });

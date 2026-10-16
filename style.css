@@ -208,7 +208,7 @@ button:hover {
     margin-top: 0;
 }
 
-/* Responsividade para tablets */
+
 @media (max-width: 900px) {
     main {
         max-width: 100%;
@@ -224,7 +224,7 @@ button:hover {
     }
 }
 
-/* Responsividade para celulares */
+
 @media (max-width: 600px) {
     header {
         padding: 24px 15px;
@@ -283,4 +283,102 @@ button:hover {
     .conteudo-publicacao {
         padding: 16px;
     }
+}
+
+.pagina-autenticacao {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    margin: 0 auto;
+}
+
+.caixa-autenticacao {
+    background-color: white;
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 5px 25px #6b3fa022;
+    text-align: left;
+}
+
+.caixa-autenticacao h2 {
+    color: #6b3fa0;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.caixa-autenticacao > p {
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+#form-cadastro {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#form-cadastro label {
+    color: #352044;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+#form-cadastro input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d8c3ee;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+#form-cadastro input:focus {
+    border-color: #8b5cc0;
+    box-shadow: 0 0 0 3px #8b5cc022;
+}
+
+#form-cadastro button {
+    width: 100%;
+    margin-top: 18px;
+}
+
+.alternar-autenticacao {
+    margin-top: 22px;
+    font-size: 15px;
+}
+
+.caixa-autenticacao a {
+    color: #6b3fa0;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.caixa-autenticacao a:hover {
+    text-decoration: underline;
+}
+
+.voltar-inicio {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+}
+
+@media (max-width: 480px) {
+    .caixa-autenticacao {
+        padding: 25px 20px;
+    }
+}
+/* Logo do MOIRAS */
+.logo-moiras {
+    width: 180px;
+    max-width: 80%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
 }
