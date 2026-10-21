@@ -1,0 +1,38 @@
+services:
+  web:
+    build: .
+    container_name: moiras_php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: moiras_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: moiras_root_dev
+      MYSQL_DATABASE: moiras
+      MYSQL_USER: moiras_user
+      MYSQL_PASSWORD: moiras_dev_123
+    ports:
+      - "3307:3306"
+    volumes:
+      - moiras_dados:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: moiras_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    depends_on:
+      - db
+
+volumes:
+  moiras_dados:

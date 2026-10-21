@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MOIRAS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>MOIRAS</h1>
+        <p>Arte feita à mão, histórias compartilhadas.</p>
+    </header>
+
+    <main class="pagina-autenticacao">
+        <section class="caixa-autenticacao">
+            <h2>Bem-vinda de volta! </h2>
+            <p>Entre na sua conta e continue compartilhando sua arte.</p>
+
+           <form action="login.php" method="POST" id="form-login">
+                <label for="email">E-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Digite seu e-mail"
+                    required
+                >
+
+                <label for="senha">Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Digite sua senha"
+                    required
+                >
+
+                <button type="submit">Entrar</button>
+            </form>
+
+            <p class="alternar-autenticacao">
+                Ainda não tem uma conta?
+                <a href="cadastro.html">Cadastre-se</a>
+            </p>
+
+            <a class="voltar-inicio" href="index.html">
+                Voltar para o início
+            </a>
+        </section>
+    </main>
+
+</body>
+</html>
