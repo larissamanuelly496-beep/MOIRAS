@@ -31,6 +31,8 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
+      PMA_USER: moiras_user
+      PMA_PASSWORD: ${MOIRAS_DB_PASSWORD}
     depends_on:
       - db
 
