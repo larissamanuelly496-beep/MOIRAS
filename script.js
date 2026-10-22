@@ -1,69 +1,123 @@
-const botoesCurtir = document.querySelectorAll(".publicacao button");
 
-botoesCurtir.forEach((botao) => {
-    botao.addEventListener("click", () => {
-        const jaCurtiu = botao.dataset.curtido === "true";
+document.addEventListener("DOMContentLoaded", () => {
 
-        if (jaCurtiu) {
-            botao.dataset.curtido = "false";
-            botao.textContent = "Curtir";
-            botao.style.backgroundColor = "#8b5cc0";
-        } else {
-            botao.dataset.curtido = "true";
-            botao.textContent = "Curtido";
-            botao.style.backgroundColor = "#5b2f87";
-        }
-    });
-});
+    // ELEMENTOS DA PÁGINA
+    const campoPesquisa = document.getElementById("pesquisa");
+    const botaoPesquisa = document.getElementById("botao-pesquisa");
 
-const campoPesquisa = document.getElementById("pesquisa");
-const botaoPesquisa = document.getElementById("botao-pesquisa");
-
-function normalizar(texto) {
-    return texto
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim();
-}
-
-botaoPesquisa.addEventListener("click", () => {
-    const termo = normalizar(campoPesquisa.value);
+    const categorias = document.querySelectorAll(".categoria");
     const publicacoes = document.querySelectorAll(".publicacao");
+    const botoesCurtir = document.querySelectorAll(".botao-curtir");
 
-    publicacoes.forEach((publicacao) => {
-        const texto = normalizar(publicacao.textContent);
-        publicacao.style.display =
-            termo === "" || texto.includes(termo) ? "" : "none";
-    });
-});
-console.log("MOIRAS funcionando!");
+    let categoriaSelecionada = "";
+    let termoPesquisa = "";
 
-const categorias = document.querySelectorAll(".categoria");
-const todasPublicacoes = document.querySelectorAll(".publicacao");
+    // NORMALIZAR TEXTO PARA FACILITAR A PESQUISA
+    function normalizar(texto) {
+        return texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
 
-categorias.forEach((categoria) => {
-    categoria.addEventListener("click", () => {
-        const tipo = categoria.dataset.categoria;
+    // PESQUISA E FILTRO DE CATEGORIAS
+    function filtrarPublicacoes() {
+        publicacoes.forEach((publicacao) => {
 
-        todasPublicacoes.forEach((publicacao) => {
-            const texto = publicacao.textContent.toLowerCase();
+            const categoria = publicacao.dataset.categoria || "";
+            const texto = normalizar(publicacao.textContent);
 
-            if (tipo === "croche" && texto.includes("crochê")) {
-                publicacao.style.display = "";
-            } else if (tipo === "amigurumi" && texto.includes("amigurumi")) {
-                publicacao.style.display = "";
-            } else if (tipo === "bordado" && texto.includes("bordado")) {
-                publicacao.style.display = "";
-            } else if (tipo === "costura" && texto.includes("costura")) {
-                publicacao.style.display = "";
-            } else {
-                publicacao.style.display = "none";
+            const correspondeCategoria =
+                categoriaSelecionada === "" ||
+                categoria === categoriaSelecionada;
+
+            const correspondePesquisa =
+                termoPesquisa === "" ||
+                texto.includes(termoPesquisa);
+
+            publicacao.style.display =
+                correspondeCategoria && correspondePesquisa
+                    ? ""
+                    : "none";
+        });
+    }
+
+    // PESQUISAR AO CLICAR NO BOTÃO
+    if (botaoPesquisa && campoPesquisa) {
+        botaoPesquisa.addEventListener("click", () => {
+
+            termoPesquisa = normalizar(campoPesquisa.value);
+
+            filtrarPublicacoes();
+
+            document.getElementById("explorar").scrollIntoView({
+                behavior: "smooth"
+            });
+        });
+
+        // PESQUISAR TAMBÉM AO APERTAR ENTER
+        campoPesquisa.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter") {
+                botaoPesquisa.click();
             }
         });
+    }
 
-        document.getElementById("explorar").scrollIntoView({
-            behavior: "smooth"
+    // FILTRAR POR CATEGORIA
+    categorias.forEach((categoria) => {
+
+        categoria.setAttribute("role", "button");
+        categoria.setAttribute("tabindex", "0");
+
+        function selecionarCategoria() {
+
+            categoriaSelecionada = categoria.dataset.categoria || "";
+
+            filtrarPublicacoes();
+
+            document.getElementById("explorar").scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+        categoria.addEventListener("click", selecionarCategoria);
+
+        // PERMITIR USAR A CATEGORIA PELO TECLADO
+        categoria.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                selecionarCategoria();
+            }
         });
     });
+
+    // BOTÕES DE CURTIR
+    botoesCurtir.forEach((botao) => {
+
+        botao.dataset.curtido = "false";
+        botao.setAttribute("aria-pressed", "false");
+
+        botao.addEventListener("click", () => {
+
+            const jaCurtiu = botao.dataset.curtido === "true";
+
+            if (jaCurtiu) {
+
+                botao.dataset.curtido = "false";
+                botao.setAttribute("aria-pressed", "false");
+                botao.textContent = "♡ Curtir";
+
+            } else {
+
+                botao.dataset.curtido = "true";
+                botao.setAttribute("aria-pressed", "true");
+                botao.textContent = "♥ Curtido";
+
+            }
+        });
+    });
+
+    console.log("MOIRAS: JavaScript carregado com sucesso! ");
+
 });
