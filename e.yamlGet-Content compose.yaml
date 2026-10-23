@@ -1,0 +1,26 @@
+[35mHEAD:cadastro.php[m[36m:[m[32m15[m[36m:[m$[1;31msenha[m = $_POST["[1;31msenha[m"] ?? "";
+[35mHEAD:cadastro.php[m[36m:[m[32m16[m[36m:[m$confirmar[1;31mSenha[m = $_POST["confirmar-[1;31msenha[m"] ?? "";
+[35mHEAD:cadastro.php[m[36m:[m[32m19[m[36m:[mif ($nome === "" || $email === "" || $[1;31msenha[m === "" || $confirmar[1;31mSenha[m === "") {
+[35mHEAD:cadastro.php[m[36m:[m[32m28[m[36m:[m// Verifica o tamanho da [1;31msenha[m
+[35mHEAD:cadastro.php[m[36m:[m[32m29[m[36m:[mif (strlen($[1;31msenha[m) < 6) {
+[35mHEAD:cadastro.php[m[36m:[m[32m30[m[36m:[m    exit("A [1;31msenha[m precisa ter pelo menos 6 caracteres. <a href='cadastro.html'>Voltar</a>");
+[35mHEAD:cadastro.php[m[36m:[m[32m33[m[36m:[m// Confere as [1;31msenha[ms
+[35mHEAD:cadastro.php[m[36m:[m[32m34[m[36m:[mif ($[1;31msenha[m !== $confirmar[1;31mSenha[m) {
+[35mHEAD:cadastro.php[m[36m:[m[32m35[m[36m:[m    exit("As [1;31msenha[ms não são iguais. <a href='cadastro.html'>Voltar</a>");
+[35mHEAD:cadastro.php[m[36m:[m[32m38[m[36m:[m// Protege a [1;31msenha[m
+[35mHEAD:cadastro.php[m[36m:[m[32m39[m[36m:[m$[1;31msenha[mHash = [1;31mpassword[m_hash($[1;31msenha[m, [1;31mPASSWORD[m_DEFAULT);
+[35mHEAD:cadastro.php[m[36m:[m[32m60[m[36m:[m    $sql = "INSERT INTO usuarios (nome, email, [1;31msenha[m)
+[35mHEAD:cadastro.php[m[36m:[m[32m61[m[36m:[m            VALUES (:nome, :email, :[1;31msenha[m)";
+[35mHEAD:cadastro.php[m[36m:[m[32m68[m[36m:[m        ":[1;31msenha[m" => $[1;31msenha[mHash
+[35mHEAD:compose.yaml[m[36m:[m[32m17[m[36m:[m      MYSQL_ROOT_[1;31mPASSWORD[m: [1;31mmoiras_root_dev[m
+[35mHEAD:compose.yaml[m[36m:[m[32m20[m[36m:[m      MYSQL_[1;31mPASSWORD[m: [1;31mmoiras_dev_123[m
+[35mHEAD:compose.yaml[m[36m:[m[32m35[m[36m:[m      PMA_[1;31mPASSWORD[m: ${MOIRAS_DB_[1;31mPASSWORD[m}
+[35mHEAD:login.php[m[36m:[m[32m15[m[36m:[m$[1;31msenha[m = $_POST["[1;31msenha[m"] ?? "";
+[35mHEAD:login.php[m[36m:[m[32m18[m[36m:[mif (!filter_var($email, FILTER_VALIDATE_EMAIL) || $[1;31msenha[m === "") {
+[35mHEAD:login.php[m[36m:[m[32m20[m[36m:[m        "Preencha o e-mail e a [1;31msenha[m corretamente. " .
+[35mHEAD:login.php[m[36m:[m[32m28[m[36m:[m    $sql = "SELECT id, nome, email, [1;31msenha[m
+[35mHEAD:login.php[m[36m:[m[32m41[m[36m:[m    // Confere a [1;31msenha[m
+[35mHEAD:login.php[m[36m:[m[32m42[m[36m:[m    if ($usuario && [1;31mpassword[m_verify($[1;31msenha[m, $usuario["[1;31msenha[m"])) {
+[35mHEAD:login.php[m[36m:[m[32m54[m[36m:[m    echo "E-mail ou [1;31msenha[m incorretos. ";
+[35mHEAD:moiras.sql[m[36m:[m[32m135[m[36m:[m  `[1;31msenha[m` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+[35mHEAD:moiras.sql[m[36m:[m[32m143[m[36m:[mINSERT INTO `usuarios` (`id`, `nome`, `email`, `[1;31msenha[m`, `criado_em`) VALUES
