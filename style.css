@@ -711,3 +711,111 @@ footer a:hover {
         font-size: 12px;
     }
 }
+
+/* ===== TELA DE CADASTRO REALIZADO ===== */
+
+.pagina-autenticacao {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #f8f2ff, #eee2ff, #fdf9ff);
+    font-family: Arial, sans-serif;
+}
+
+.caixa-autenticacao {
+    width: 100%;
+    max-width: 460px;
+    padding: 45px 35px;
+    background: #ffffff;
+    border: 1px solid #ead8ff;
+    border-radius: 28px;
+    box-shadow: 0 15px 40px rgba(91, 45, 145, 0.13);
+    text-align: center;
+    animation: aparecer 0.6s ease;
+}
+
+.caixa-autenticacao h1 {
+    margin: 0 0 22px;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #48236f;
+}
+
+.caixa-autenticacao h2 {
+    margin: 0 0 15px;
+    font-size: 27px;
+    color: #7136a8;
+}
+
+.caixa-autenticacao p {
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #746580;
+}
+
+.caixa-autenticacao a {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 14px;
+    padding: 14px 20px;
+    border: 2px solid #7136a8;
+    border-radius: 14px;
+    background: #7136a8;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.caixa-autenticacao a:hover {
+    background: #542681;
+    border-color: #542681;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(84, 38, 129, 0.2);
+}
+
+.caixa-autenticacao a:last-child {
+    background: #ffffff;
+    color: #7136a8;
+}
+
+.caixa-autenticacao a:last-child:hover {
+    background: #f5edff;
+    color: #542681;
+}
+
+/* Animação suave ao abrir a página */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ajustes para celulares */
+@media (max-width: 480px) {
+    .caixa-autenticacao {
+        padding: 35px 22px;
+        border-radius: 22px;
+    }
+
+    .caixa-autenticacao h1 {
+        font-size: 31px;
+    }
+
+    .caixa-autenticacao h2 {
+        font-size: 23px;
+    }
+}

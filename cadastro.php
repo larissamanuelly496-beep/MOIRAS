@@ -53,7 +53,10 @@ try {
         exit("Este e-mail já está cadastrado. <a href='login.html'>Ir para o login</a>");
     }
 
-    // Salva o novo usuário
+    // Inicia uma transação para cadastrar usuário e perfil juntos
+    $conexao->beginTransaction();
+
+    // 1. Cadastra o usuário
     $sql = "INSERT INTO usuarios (nome, email, senha)
             VALUES (:nome, :email, :senha)";
 
@@ -64,6 +67,22 @@ try {
         ":email" => $email,
         ":senha" => $senhaHash
     ]);
+
+    // 2. Obtém o ID do usuário recém-cadastrado
+    $usuarioId = (int) $conexao->lastInsertId();
+
+    // 3. Cria o perfil associado ao usuário
+    $sqlPerfil = "INSERT INTO perfis (usuario_id)
+                  VALUES (:usuario_id)";
+
+    $comandoPerfil = $conexao->prepare($sqlPerfil);
+
+    $comandoPerfil->execute([
+        ":usuario_id" => $usuarioId
+    ]);
+
+    // 4. Confirma o cadastro e a criação do perfil
+    $conexao->commit();
 
     // Exibe a confirmação do cadastro
     echo "<!DOCTYPE html>";
@@ -80,6 +99,7 @@ try {
     echo "<h1>MOIRAS</h1>";
     echo "<h2>Cadastro realizado!</h2>";
     echo "<p>Sua conta foi criada com sucesso.</p>";
+    echo "<p>Seu perfil também foi criado. Agora você pode entrar e adicionar sua foto!</p>";
     echo "<a href='login.html'>Entrar na minha conta</a>";
     echo "<br><br>";
     echo "<a href='index.html'>Voltar ao início</a>";
@@ -89,7 +109,13 @@ try {
     echo "</html>";
 
 } catch (PDOException $erro) {
-    error_log("Erro no cadastro do MOIRAS: " . $erro->getMessage());
+
+    // Desfaz as operações se alguma delas falhar
+    if ($conexao->inTransaction()) {
+        $conexao->rollBack();
+    }
+
+    error_log("Erro ao cadastrar usuário ou perfil: " . $erro->getMessage());
 
     http_response_code(500);
 
