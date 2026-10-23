@@ -65,7 +65,7 @@ try {
         ":senha" => $senhaHash
     ]);
 
-    // Confirma o cadastro
+    // Exibe a confirmação do cadastro
     echo "<!DOCTYPE html>";
     echo "<html lang='pt-BR'>";
     echo "<head>";
@@ -77,7 +77,7 @@ try {
     echo "<body>";
     echo "<main class='pagina-autenticacao'>";
     echo "<section class='caixa-autenticacao'>";
-    echo "<h1>MOIRAS </h1>";
+    echo "<h1>MOIRAS</h1>";
     echo "<h2>Cadastro realizado!</h2>";
     echo "<p>Sua conta foi criada com sucesso.</p>";
     echo "<a href='login.html'>Entrar na minha conta</a>";
@@ -88,4 +88,11 @@ try {
     echo "</body>";
     echo "</html>";
 
-} catch (PDOException $erro)
+} catch (PDOException $erro) {
+    error_log("Erro no cadastro do MOIRAS: " . $erro->getMessage());
+
+    http_response_code(500);
+
+    echo "Não foi possível concluir o cadastro.";
+    echo "<br><a href='cadastro.html'>Voltar ao cadastro</a>";
+}

@@ -658,3 +658,56 @@ main > p {
     text-align: center;
     padding: 0 20px;
 }
+/* RODAPÉ MOIRAS */
+
+footer {
+    background: linear-gradient(135deg, #4b286d, #8051ad);
+    color: #ffffff;
+    text-align: center;
+    padding: 35px 20px;
+    margin-top: 60px;
+    border-top: 4px solid #c8a8e9;
+}
+
+footer p {
+    color: #f0e5fa;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 6px 0;
+}
+
+footer p:first-child {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+footer a {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 22px;
+    background: #ffffff;
+    color: #4b286d;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    background: #e6d6fa;
+    color: #352044;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 600px) {
+    footer {
+        padding: 28px 15px;
+        margin-top: 40px;
+    }
+
+    footer p {
+        font-size: 12px;
+    }
+}
