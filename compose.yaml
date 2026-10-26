@@ -14,10 +14,10 @@ services:
     container_name: moiras_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: moiras_root_dev
+      MYSQL_ROOT_PASSWORD: ${MOIRAS_ROOT_PASSWORD:?Defina MOIRAS_ROOT_PASSWORD no arquivo .env}
       MYSQL_DATABASE: moiras
       MYSQL_USER: moiras_user
-      MYSQL_PASSWORD: moiras_dev_123
+      MYSQL_PASSWORD: ${MOIRAS_DB_PASSWORD:?Defina MOIRAS_DB_PASSWORD no arquivo .env}
     ports:
       - "3307:3306"
     volumes:
@@ -26,13 +26,14 @@ services:
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: moiras_phpmyadmin
+    restart: unless-stopped
     ports:
       - "8081:80"
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
       PMA_USER: moiras_user
-      PMA_PASSWORD: ${MOIRAS_DB_PASSWORD}
+      PMA_PASSWORD: ${MOIRAS_DB_PASSWORD:?Defina MOIRAS_DB_PASSWORD no arquivo .env}
     depends_on:
       - db
 

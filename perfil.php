@@ -10,11 +10,8 @@ require_once "conexao.php";
 
 $usuarioId = (int) $_SESSION["usuario_id"];
 
-$nome = htmlspecialchars(
-    $_SESSION["usuario_nome"] ?? "Artesão",
-    ENT_QUOTES,
-    "UTF-8"
-);
+$nomeOriginal = $_SESSION["usuario_nome"] ?? "Artesão";
+$nome = htmlspecialchars($nomeOriginal, ENT_QUOTES, "UTF-8");
 
 $email = htmlspecialchars(
     $_SESSION["usuario_email"] ?? "",
@@ -22,8 +19,8 @@ $email = htmlspecialchars(
     "UTF-8"
 );
 
-// Foto padrão
-$caminhoFoto = "fotos/jasss.jpg";
+// Inicialmente, o perfil fica sem foto.
+$caminhoFoto = "";
 
 try {
     $consulta = $conexao->prepare(
@@ -39,12 +36,12 @@ try {
 
     $perfil = $consulta->fetch(PDO::FETCH_ASSOC);
 
-    if (
-        $perfil &&
-        !empty($perfil["foto"]) &&
-        is_file(__DIR__ . "/" . $perfil["foto"])
-    ) {
-        $caminhoFoto = $perfil["foto"];
+    if ($perfil && !empty($perfil["foto"])) {
+        $arquivoFoto = __DIR__ . "/" . $perfil["foto"];
+
+        if (is_file($arquivoFoto)) {
+            $caminhoFoto = $perfil["foto"];
+        }
     }
 } catch (PDOException $erro) {
     error_log("Erro ao carregar perfil: " . $erro->getMessage());
@@ -52,6 +49,21 @@ try {
 
 $caminhoFotoSeguro = htmlspecialchars(
     $caminhoFoto,
+    ENT_QUOTES,
+    "UTF-8"
+);
+
+// Inicial do nome para o círculo sem foto.
+$inicial = function_exists("mb_substr")
+    ? mb_strtoupper(mb_substr(trim($nomeOriginal), 0, 1, "UTF-8"), "UTF-8")
+    : strtoupper(substr(trim($nomeOriginal), 0, 1));
+
+if ($inicial === "") {
+    $inicial = "M";
+}
+
+$inicialSegura = htmlspecialchars(
+    $inicial,
     ENT_QUOTES,
     "UTF-8"
 );
@@ -88,12 +100,23 @@ $caminhoFotoSeguro = htmlspecialchars(
 
             <div class="area-foto-perfil">
 
-                <img
-                    src="<?= $caminhoFotoSeguro ?>"
-                    alt="Foto de perfil de <?= $nome ?>"
-                    class="foto-perfil"
-                    id="imagem-perfil"
-                >
+                <?php if ($caminhoFoto !== ""): ?>
+                    <img
+                        src="<?= $caminhoFotoSeguro ?>"
+                        alt="Foto de perfil de <?= $nome ?>"
+                        class="foto-perfil"
+                        id="imagem-perfil"
+                    >
+                <?php else: ?>
+                    <div
+                        class="foto-perfil foto-sem-imagem"
+                        id="imagem-perfil"
+                        role="img"
+                        aria-label="Perfil sem foto"
+                    >
+                        <span><?= $inicialSegura ?></span>
+                    </div>
+                <?php endif; ?>
 
                 <form
                     action="salvar-foto.php"
@@ -251,16 +274,7 @@ $caminhoFotoSeguro = htmlspecialchars(
                 return;
             }
 
-            const leitor = new FileReader();
-
-            leitor.onload = function (evento) {
-                imagemPerfil.src = evento.target.result;
-            };
-
-            leitor.readAsDataURL(arquivo);
-
-            mensagemFoto.textContent = "Salvando sua foto...";
-
+            mensagemFoto.textContent = "Enviando sua foto...";
             formularioFoto.submit();
         });
 

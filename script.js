@@ -5,14 +5,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const campoPesquisa = document.getElementById("pesquisa");
     const botaoPesquisa = document.getElementById("botao-pesquisa");
 
-    const categorias = document.querySelectorAll(".categoria");
-    const publicacoes = document.querySelectorAll(".publicacao");
-    const botoesCurtir = document.querySelectorAll(".botao-curtir");
+    const categorias = document.querySelectorAll(
+        "#categorias .categoria"
+    );
+
+    const publicacoes = document.querySelectorAll(
+        ".publicacao"
+    );
+
+    const botoesCurtir = document.querySelectorAll(
+        ".botao-curtir"
+    );
 
     let categoriaSelecionada = "";
     let termoPesquisa = "";
 
-    // NORMALIZAR TEXTO PARA FACILITAR A PESQUISA
+    // NORMALIZAR TEXTO: IGNORAR DIFERENÇAS DE ACENTUAÇÃO
     function normalizar(texto) {
         return texto
             .toLowerCase()
@@ -21,46 +29,135 @@ document.addEventListener("DOMContentLoaded", () => {
             .trim();
     }
 
-    // PESQUISA E FILTRO DE CATEGORIAS
+    // PREPARAR AS INFORMAÇÕES DE CADA PUBLICAÇÃO
+    const dadosPublicacoes = Array.from(publicacoes).map(
+        (publicacao) => {
+            const titulo =
+                publicacao.querySelector("h3")?.textContent || "";
+
+            const descricao =
+                publicacao.querySelector("p")?.textContent || "";
+
+            const autor =
+                publicacao.querySelector(".conteudo-publicacao span")
+                    ?.textContent || "";
+
+            return {
+                elemento: publicacao,
+                categoria: normalizar(
+                    publicacao.dataset.categoria || ""
+                ),
+                texto: normalizar(
+                    `${titulo} ${descricao} ${autor} ${publicacao.dataset.categoria || ""}`
+                )
+            };
+        }
+    );
+
+    // CRIAR MENSAGEM DE RESULTADO
+    let mensagemResultado = document.getElementById(
+        "mensagem-resultado"
+    );
+
+    if (!mensagemResultado) {
+        mensagemResultado = document.createElement("p");
+        mensagemResultado.id = "mensagem-resultado";
+        mensagemResultado.setAttribute("aria-live", "polite");
+
+        const lista = document.querySelector(".lista-publicacoes");
+
+        if (lista) {
+            lista.insertAdjacentElement(
+                "afterend",
+                mensagemResultado
+            );
+        }
+    }
+
+    // PESQUISAR E FILTRAR PUBLICAÇÕES
     function filtrarPublicacoes() {
-        publicacoes.forEach((publicacao) => {
+        let quantidadeVisivel = 0;
 
-            const categoria = publicacao.dataset.categoria || "";
-            const texto = normalizar(publicacao.textContent);
-
+        dadosPublicacoes.forEach((dados) => {
             const correspondeCategoria =
                 categoriaSelecionada === "" ||
-                categoria === categoriaSelecionada;
+                dados.categoria === categoriaSelecionada;
 
             const correspondePesquisa =
                 termoPesquisa === "" ||
-                texto.includes(termoPesquisa);
+                dados.texto.includes(termoPesquisa);
 
-            publicacao.style.display =
-                correspondeCategoria && correspondePesquisa
-                    ? ""
-                    : "none";
+            const mostrar =
+                correspondeCategoria && correspondePesquisa;
+
+            dados.elemento.hidden = !mostrar;
+
+            if (mostrar) {
+                quantidadeVisivel++;
+            }
+        });
+
+        if (mensagemResultado) {
+            if (quantidadeVisivel === 0) {
+                mensagemResultado.textContent =
+                    "Nenhum trabalho encontrado. Tente outra pesquisa ou categoria.";
+            } else {
+                mensagemResultado.textContent =
+                    `${quantidadeVisivel} ${
+                        quantidadeVisivel === 1
+                            ? "trabalho encontrado"
+                            : "trabalhos encontrados"
+                    }.`;
+            }
+        }
+    }
+
+    // ATUALIZAR O ESTADO VISUAL DAS CATEGORIAS
+    function atualizarCategorias() {
+        categorias.forEach((categoria) => {
+            const selecionada =
+                normalizar(categoria.dataset.categoria || "") ===
+                categoriaSelecionada &&
+                categoriaSelecionada !== "";
+
+            categoria.classList.toggle(
+                "categoria-selecionada",
+                selecionada
+            );
+
+            categoria.setAttribute(
+                "aria-pressed",
+                String(selecionada)
+            );
         });
     }
 
-    // PESQUISAR AO CLICAR NO BOTÃO
-    if (botaoPesquisa && campoPesquisa) {
-        botaoPesquisa.addEventListener("click", () => {
+    // EXECUTAR A PESQUISA
+    function pesquisar() {
+        termoPesquisa = normalizar(campoPesquisa?.value || "");
 
-            termoPesquisa = normalizar(campoPesquisa.value);
+        filtrarPublicacoes();
 
-            filtrarPublicacoes();
-
-            document.getElementById("explorar").scrollIntoView({
-                behavior: "smooth"
-            });
+        document.getElementById("explorar")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
         });
+    }
 
-        // PESQUISAR TAMBÉM AO APERTAR ENTER
+    if (botaoPesquisa && campoPesquisa) {
+        botaoPesquisa.addEventListener("click", pesquisar);
+
         campoPesquisa.addEventListener("keydown", (evento) => {
             if (evento.key === "Enter") {
-                botaoPesquisa.click();
+                evento.preventDefault();
+                pesquisar();
             }
+        });
+
+        // ATUALIZAR OS RESULTADOS ENQUANTO A PESSOA DIGITA
+        campoPesquisa.addEventListener("input", () => {
+            termoPesquisa = normalizar(campoPesquisa.value);
+            filtrarPublicacoes();
         });
     }
 
@@ -71,53 +168,100 @@ document.addEventListener("DOMContentLoaded", () => {
         categoria.setAttribute("tabindex", "0");
 
         function selecionarCategoria() {
+            const categoriaClicada = normalizar(
+                categoria.dataset.categoria || ""
+            );
 
-            categoriaSelecionada = categoria.dataset.categoria || "";
+            // CLICAR NOVAMENTE REMOVE O FILTRO
+            categoriaSelecionada =
+                categoriaSelecionada === categoriaClicada
+                    ? ""
+                    : categoriaClicada;
 
+            atualizarCategorias();
             filtrarPublicacoes();
 
-            document.getElementById("explorar").scrollIntoView({
-                behavior: "smooth"
+            document.getElementById("explorar")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
             });
         }
 
-        categoria.addEventListener("click", selecionarCategoria);
+        categoria.addEventListener(
+            "click",
+            selecionarCategoria
+        );
 
         // PERMITIR USAR A CATEGORIA PELO TECLADO
         categoria.addEventListener("keydown", (evento) => {
-            if (evento.key === "Enter" || evento.key === " ") {
+            if (
+                evento.key === "Enter" ||
+                evento.key === " "
+            ) {
                 evento.preventDefault();
                 selecionarCategoria();
             }
         });
     });
 
-    // BOTÕES DE CURTIR
-    botoesCurtir.forEach((botao) => {
+    // CARREGAR CURTIDAS SALVAS NO NAVEGADOR
+    botoesCurtir.forEach((botao, indice) => {
+        const chaveCurtida = `moiras-curtida-${indice}`;
 
-        botao.dataset.curtido = "false";
-        botao.setAttribute("aria-pressed", "false");
+        function atualizarBotao(curtido) {
+            botao.dataset.curtido = String(curtido);
+            botao.setAttribute(
+                "aria-pressed",
+                String(curtido)
+            );
+
+            botao.textContent = curtido
+                ? "♥ Curtido"
+                : "♡ Curtir";
+
+            botao.classList.toggle(
+                "curtido",
+                curtido
+            );
+        }
+
+        let curtido = false;
+
+        try {
+            curtido =
+                localStorage.getItem(chaveCurtida) === "true";
+        } catch (erro) {
+            console.warn(
+                "Não foi possível carregar a curtida salva.",
+                erro
+            );
+        }
+
+        atualizarBotao(curtido);
 
         botao.addEventListener("click", () => {
+            curtido = botao.dataset.curtido !== "true";
 
-            const jaCurtiu = botao.dataset.curtido === "true";
+            atualizarBotao(curtido);
 
-            if (jaCurtiu) {
-
-                botao.dataset.curtido = "false";
-                botao.setAttribute("aria-pressed", "false");
-                botao.textContent = "♡ Curtir";
-
-            } else {
-
-                botao.dataset.curtido = "true";
-                botao.setAttribute("aria-pressed", "true");
-                botao.textContent = "♥ Curtido";
-
+            try {
+                localStorage.setItem(
+                    chaveCurtida,
+                    String(curtido)
+                );
+            } catch (erro) {
+                console.warn(
+                    "Não foi possível salvar a curtida.",
+                    erro
+                );
             }
         });
     });
 
-    console.log("MOIRAS: JavaScript carregado com sucesso! ");
+    // INFORMAR QUE O JAVASCRIPT FOI CARREGADO
+    filtrarPublicacoes();
 
+    console.log(
+        "MOIRAS: pesquisa, filtros e curtidas inicializados!"
+    );
 });

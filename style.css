@@ -1048,3 +1048,83 @@ button:focus-visible,
         max-width: 100%;
     }
 }
+/* RESULTADO DA PESQUISA */
+#mensagem-resultado {
+    margin: 20px auto;
+    text-align: center;
+    color: var(--roxo-escuro);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* CATEGORIA SELECIONADA */
+.categoria-selecionada {
+    outline: 3px solid var(--roxo);
+    outline-offset: 3px;
+    background: var(--lilas-claro) !important;
+}
+
+/* FOCO PELO TECLADO */
+.categoria:focus-visible,
+.botao-curtir:focus-visible,
+#botao-pesquisa:focus-visible,
+#pesquisa:focus-visible {
+    outline: 3px solid var(--roxo-medio);
+    outline-offset: 4px;
+}
+
+/* BOTÃO DE CURTIDA ATIVO */
+.botao-curtir.curtido {
+    color: var(--roxo-escuro);
+    font-weight: 700;
+}
+
+/* PUBLICAÇÕES OCULTAS PELOS FILTROS */
+.publicacao[hidden] {
+    display: none !important;
+}
+
+/* Foto de perfil sem imagem */
+.foto-sem-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
+
+    border: 5px solid #ffffff;
+    border-radius: 50%;
+
+    background: linear-gradient(135deg, #f0e4ff, #d9c1fa);
+    box-shadow: 0 8px 25px rgba(95, 53, 140, 0.18);
+
+    color: #7442a8;
+    font-size: 58px;
+    font-weight: bold;
+
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.foto-sem-imagem span {
+    display: block;
+    line-height: 1;
+}
+
+/* Mantém a foto real com o mesmo formato */
+img.foto-perfil {
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
+
+    object-fit: cover;
+    object-position: center;
+
+    border: 5px solid #ffffff;
+    border-radius: 50%;
+
+    box-shadow: 0 8px 25px rgba(95, 53, 140, 0.18);
+    box-sizing: border-box;
+}
