@@ -1128,3 +1128,18 @@ img.foto-perfil {
     box-shadow: 0 8px 25px rgba(95, 53, 140, 0.18);
     box-sizing: border-box;
 }
+
+/* CORREÇÃO DAS FOTOS DAS PUBLICAÇÕES */
+.imagem-publicacao img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background: #f8f4fc;
+    transition: none;
+}
+
+.publicacao:hover .imagem-publicacao img {
+    transform: none;
+}

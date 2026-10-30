@@ -1,20 +1,24 @@
 <?php
 session_start();
 
-// Verifica se o usuário está conectado
+require_once "conexao.php";
+
+// Verifica se o usuário está logado
 if (!isset($_SESSION["usuario_id"])) {
     header("Location: login.html");
     exit;
 }
 
-// Aceita somente envios pelo formulário
+// Aceita somente envio pelo formulário
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: adicionar-trabalho.php");
     exit;
 }
 
-// Recebe os dados do formulário
+// Recebe os dados
+$usuario_id = (int) $_SESSION["usuario_id"];
 $titulo = trim($_POST["titulo"] ?? "");
+$categoria = trim($_POST["categoria"] ?? "");
 $descricao = trim($_POST["descricao"] ?? "");
 $categoria = trim($_POST["categoria"] ?? "");
 
@@ -24,100 +28,72 @@ $categoriasPermitidas = [
     "Outros trabalhos"
 ];
 
-// Valida o título
-if ($titulo === "" || mb_strlen($titulo) > 150) {
-    exit("Informe um nome válido para o trabalho.");
+// Valida os campos
+if ($titulo === "" || $categoria === "") {
+    exit("Preencha o título e a categoria.");
 }
 
-// Valida a descrição
-if (mb_strlen($descricao) > 3000) {
-    exit("A descrição deve ter no máximo 3000 caracteres.");
-}
-
-// Valida a categoria
-if (!in_array($categoria, $categoriasPermitidas, true)) {
-    exit("Selecione uma categoria válida.");
-}
-
-// Verifica se uma foto foi enviada
-if (
-    !isset($_FILES["foto"]) ||
-    $_FILES["foto"]["error"] !== UPLOAD_ERR_OK
-) {
-    exit("Selecione uma foto válida.");
+if (!isset($_FILES["foto"]) || $_FILES["foto"]["error"] !== UPLOAD_ERR_OK) {
+    exit("Erro ao enviar a foto. Tente novamente.");
 }
 
 $foto = $_FILES["foto"];
 
-// Limita o tamanho a 5 MB
+// Limite de 5 MB
 if ($foto["size"] > 5 * 1024 * 1024) {
     exit("A foto deve ter no máximo 5 MB.");
 }
 
-$arquivoTemporario = $foto["tmp_name"];
+// Verifica o tipo real da imagem
+$imagem = getimagesize($foto["tmp_name"]);
 
-if (!is_uploaded_file($arquivoTemporario)) {
-    exit("O arquivo enviado é inválido.");
+if ($imagem === false) {
+    exit("O arquivo enviado não é uma imagem válida.");
 }
 
 // Aceita somente imagens JPG, PNG ou WEBP
 $tiposPermitidos = [
-    "image/jpeg" => "jpg",
-    "image/png" => "png",
-    "image/webp" => "webp"
+    IMAGETYPE_JPEG => "jpg",
+    IMAGETYPE_PNG => "png",
+    IMAGETYPE_WEBP => "webp"
 ];
 
-$tipo = (new finfo(FILEINFO_MIME_TYPE))->file($arquivoTemporario);
+$tipoImagem = $imagem[2];
 
-if (!isset($tiposPermitidos[$tipo])) {
-    exit("Use uma imagem JPG, PNG ou WEBP.");
+if (!isset($tiposPermitidos[$tipoImagem])) {
+    exit("Formato não permitido. Use JPG, PNG ou WEBP.");
 }
 
-// Confirma que o arquivo é uma imagem válida
-if (@getimagesize($arquivoTemporario) === false) {
-    exit("O arquivo enviado não é uma imagem válida.");
-}
-
-// Conecta ao banco de dados
-require_once __DIR__ . "/conexao.php";
-
-$usuarioId = (int) $_SESSION["usuario_id"];
-
+// Cria a pasta para guardar as fotos
 $pasta = __DIR__ . "/uploads/trabalhos/";
 
-if (!is_dir($pasta) && !mkdir($pasta, 0755, true)) {
-    exit("Não foi possível criar a pasta dos trabalhos.");
+if (!is_dir($pasta)) {
+    if (!mkdir($pasta, 0755, true)) {
+        exit("Não foi possível criar a pasta de fotos.");
+    }
 }
 
-if (!is_writable($pasta)) {
-    exit("A pasta dos trabalhos não permite gravar arquivos.");
+// Gera um nome único para a foto
+$nomeFoto = bin2hex(random_bytes(16)) . "." . $tiposPermitidos[$tipoImagem];
+
+$caminhoCompleto = $pasta . $nomeFoto;
+$caminhoBanco = "uploads/trabalhos/" . $nomeFoto;
+
+// Move a foto para a pasta definitiva
+if (!move_uploaded_file($foto["tmp_name"], $caminhoCompleto)) {
+    exit("Não foi possível salvar a foto no servidor.");
 }
-
-// Gera um nome exclusivo para a imagem
-$extensao = $tiposPermitidos[$tipo];
-
-$nomeArquivo = "trabalho_" . $usuarioId . "_" .
-    bin2hex(random_bytes(8)) . "." . $extensao;
-
-$caminhoCompleto = $pasta . $nomeArquivo;
-$caminhoBanco = "uploads/trabalhos/" . $nomeArquivo;
 
 try {
-    // Salva a imagem no servidor
-    if (!move_uploaded_file($arquivoTemporario, $caminhoCompleto)) {
-        exit("Não foi possível salvar a foto.");
-    }
-
-    // Salva os dados no banco de dados
     $sql = "INSERT INTO trabalhos
             (usuario_id, titulo, descricao, categoria, foto)
             VALUES
             (:usuario_id, :titulo, :descricao, :categoria, :foto)";
 
-    $consulta = $conexao->prepare($sql);
+    $stmt = $conexao->prepare($sql);
 
-    $consulta->execute([
-        ":usuario_id" => $usuarioId,
+    $stmt->execute([
+        ":usuario_id" => $usuario_id,
         ":titulo" => $titulo,
         ":descricao" => $descricao,
         ":categoria" => $categoria,
@@ -128,14 +104,12 @@ try {
     header("Location: perfil.php?trabalho=salvo");
     exit;
 
-} catch (Throwable $erro) {
-    // Remove a imagem caso o cadastro falhe
-    if (isset($caminhoCompleto) && is_file($caminhoCompleto)) {
+} catch (PDOException $e) {
+    // Remove a foto caso o cadastro no banco falhe
+    if (file_exists($caminhoCompleto)) {
         unlink($caminhoCompleto);
     }
 
-    error_log("Erro ao salvar trabalho: " . $erro->getMessage());
-
-    http_response_code(500);
-    exit("Não foi possível salvar o trabalho. Verifique a configuração do servidor.");
+    error_log("Erro ao salvar trabalho: " . $e->getMessage());
+    exit("Não foi possível publicar o trabalho. Verifique os dados e tente novamente.");
 }

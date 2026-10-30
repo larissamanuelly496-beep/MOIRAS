@@ -145,14 +145,14 @@ function caminhoFotoTrabalho($foto) {
             border-radius: 18px;
             box-shadow: 0 5px 18px rgba(70, 30, 100, .08);
         }
-
-        .foto-trabalho {
-            display: block;
-            width: 100%;
-            height: 230px;
-            object-fit: cover;
-            background: #f3eafa;
-        }
+.foto-trabalho {
+    display: block;
+    width: 100%;
+    height: 230px;
+    object-fit: contain;
+    object-position: center;
+    background: #f3eafa;
+}
 
         .informacoes-trabalho {
             padding: 18px;
